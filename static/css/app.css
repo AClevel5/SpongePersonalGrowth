@@ -16,23 +16,23 @@
   --text-faint: #5a5a66;
 
   /* Brand */
-  --accent: #818cf8;
-  --accent-hover: #6366f1;
-  --accent-soft: rgba(129, 140, 248, 0.12);
+  --accent: #fb7e6b;
+  --accent-hover: #f9684f;
+  --accent-soft: rgba(251, 126, 107, 0.12);
   --good: #34d399;
   --good-soft: rgba(52, 211, 153, 0.12);
-  --bad: #f87171;
-  --bad-soft: rgba(248, 113, 113, 0.12);
+  --bad: #ef4444;
+  --bad-soft: rgba(239, 68, 68, 0.12);
 
-  /* Brand gradient */
-  --grad: linear-gradient(135deg, #818cf8 0%, #34d399 100%);
+  /* Brand gradient: coral → amber (matches the sponge logo) */
+  --grad: linear-gradient(135deg, #fb7e6b 0%, #fbbf24 100%);
 
   /* Radii / Shadows */
   --radius: 14px;
   --radius-lg: 20px;
   --radius-pill: 999px;
   --shadow-soft: 0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 8px 24px rgba(0, 0, 0, 0.25);
-  --shadow-pop: 0 10px 30px rgba(129, 140, 248, 0.25);
+  --shadow-pop: 0 10px 30px rgba(251, 126, 107, 0.30);
 
   /* Motion */
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
@@ -56,8 +56,8 @@ html, body {
 
 body {
   background:
-    radial-gradient(1200px 600px at 80% -10%, rgba(129, 140, 248, 0.12), transparent 60%),
-    radial-gradient(900px 500px at -10% 110%, rgba(52, 211, 153, 0.08), transparent 60%),
+    radial-gradient(1200px 600px at 80% -10%, rgba(251, 126, 107, 0.14), transparent 60%),
+    radial-gradient(900px 500px at -10% 110%, rgba(251, 191, 36, 0.08), transparent 60%),
     var(--bg);
   background-attachment: fixed;
 }
@@ -337,7 +337,7 @@ input::placeholder { color: var(--text-faint); }
   content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(400px 200px at 50% -20%, rgba(129, 140, 248, 0.15), transparent 70%);
+  background: radial-gradient(400px 200px at 50% -20%, rgba(251, 126, 107, 0.18), transparent 70%);
   pointer-events: none;
 }
 
@@ -439,7 +439,7 @@ input::placeholder { color: var(--text-faint); }
   align-items: center;
   justify-content: center;
   transition: all 0.2s var(--ease);
-  box-shadow: 0 4px 12px rgba(129, 140, 248, 0.3);
+  box-shadow: 0 4px 12px rgba(251, 126, 107, 0.35);
 }
 
 .log-btn:hover { background: var(--accent-hover); transform: scale(1.08); }
@@ -517,7 +517,7 @@ input::placeholder { color: var(--text-faint); }
   content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(400px 200px at 50% -20%, rgba(129, 140, 248, 0.15), transparent 70%);
+  background: radial-gradient(400px 200px at 50% -20%, rgba(251, 126, 107, 0.18), transparent 70%);
   pointer-events: none;
 }
 
