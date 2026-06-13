@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#0f172a" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>Sponge</title>
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/app.css" />
+</head>
+<body>
+
+<!-- ── Auth Screen ─────────────────────────────────────────────── -->
+<div id="auth-screen" class="screen auth-page">
+  <div class="auth-container">
+    <div class="auth-logo">Sponge</div>
+    <p class="auth-tagline">Soak up the good. Wring out the rest.</p>
+
+    <div class="tabs">
+      <button class="tab active" data-auth-tab="login">Sign In</button>
+      <button class="tab" data-auth-tab="register">Register</button>
+    </div>
+
+    <form id="login-form" class="auth-form">
+      <div class="form-group">
+        <label>Username</label>
+        <input type="text" id="login-username" autocomplete="username" />
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="login-password" autocomplete="current-password" />
+      </div>
+      <button type="submit" class="btn btn-primary btn-full">Sign In</button>
+      <button type="button" id="passkey-login-btn" class="btn btn-ghost btn-full">Sign in with Passkey</button>
+      <div id="login-error" class="error-msg"></div>
+    </form>
+
+    <form id="register-form" class="auth-form hidden">
+      <div class="form-group">
+        <label>Choose a Username</label>
+        <input type="text" id="register-username" autocomplete="username" />
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="register-password" autocomplete="new-password" placeholder="At least 6 characters" />
+      </div>
+      <button type="submit" class="btn btn-primary btn-full">Create Account</button>
+      <div id="register-error" class="error-msg"></div>
+    </form>
+  </div>
+</div>
+
+<!-- ── Main App ─────────────────────────────────────────────── -->
+<div id="app-screen" class="screen hidden">
+  <header class="topbar">
+    <div class="brand">Sponge</div>
+    <div class="topbar-right">
+      <span id="user-name" class="user-name"></span>
+      <button id="passkey-add-btn" class="icon-btn" title="Add passkey">+ Passkey</button>
+      <button id="logout-btn" class="icon-btn">Log out</button>
+    </div>
+  </header>
+
+  <nav class="bottom-nav">
+    <button class="nav-tab active" data-tab="today">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      <span>Today</span>
+    </button>
+    <button class="nav-tab" data-tab="week">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+      <span>Week</span>
+    </button>
+    <button class="nav-tab" data-tab="activities">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      <span>Activities</span>
+    </button>
+  </nav>
+
+  <main class="content">
+    <!-- TODAY -->
+    <section id="tab-today" class="tab-panel active">
+      <div class="hero">
+        <div class="hero-label" id="today-date-label"></div>
+        <div class="hero-points" id="today-total">0</div>
+        <div class="hero-sub">points today</div>
+      </div>
+      <h3 class="section-title">Tap to log</h3>
+      <div id="today-activities" class="activity-list"></div>
+      <h3 class="section-title">Logged today</h3>
+      <div id="today-log" class="log-list"></div>
+    </section>
+
+    <!-- WEEK -->
+    <section id="tab-week" class="tab-panel">
+      <div class="week-header">
+        <button class="icon-btn" id="week-prev">&larr;</button>
+        <div class="week-range" id="week-range"></div>
+        <button class="icon-btn" id="week-next">&rarr;</button>
+      </div>
+      <div class="week-total-card">
+        <div class="hero-points" id="week-total">0</div>
+        <div class="hero-sub">total this week</div>
+      </div>
+      <div id="week-grid" class="week-grid"></div>
+    </section>
+
+    <!-- ACTIVITIES -->
+    <section id="tab-activities" class="tab-panel">
+      <h3 class="section-title">New activity</h3>
+      <form id="new-activity-form" class="inline-form">
+        <input type="text" id="new-activity-name" placeholder="Activity name" required />
+        <input type="number" id="new-activity-points" placeholder="Points (negative for bad habits)" required />
+        <button type="submit" class="btn btn-primary">Add</button>
+      </form>
+      <div class="row-between">
+        <h3 class="section-title">Your activities</h3>
+        <label class="toggle">
+          <input type="checkbox" id="show-archived" /> Show archived
+        </label>
+      </div>
+      <div id="activities-list" class="activity-manage-list"></div>
+    </section>
+  </main>
+</div>
+
+<script src="/js/app.js"></script>
+<script>
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("/sw.js").catch(() => {});
+  }
+</script>
+</body>
+</html>
