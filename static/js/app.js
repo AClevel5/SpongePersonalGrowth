@@ -174,6 +174,7 @@ $$(".nav-tab").forEach(t => t.addEventListener("click", () => {
   $$(".nav-tab").forEach(x => x.classList.toggle("active", x === t));
   $$(".tab-panel").forEach(p => p.classList.toggle("active", p.id === `tab-${name}`));
   if (name === "today") renderToday();
+  if (name === "todos") renderTodos();
   if (name === "week") renderWeek();
   if (name === "activities") renderActivitiesManage();
 }));
@@ -311,6 +312,71 @@ $("#week-prev").addEventListener("click", () => {
 $("#week-next").addEventListener("click", () => {
   state.weekStart = addDays(state.weekStart, 7);
   renderWeek();
+});
+
+// ── Todos ─────────────────────────────────────────────
+async function renderTodos() {
+  const date = today();
+  const d = new Date();
+  $("#todos-date-label").textContent = formatDay(d);
+
+  const todos = await api(`/api/todos?date=${date}`);
+  const done = todos.filter(t => t.completed).length;
+  $("#todos-progress").textContent = `${done} of ${todos.length} done`;
+
+  const listEl = $("#todos-list");
+  if (todos.length === 0) {
+    listEl.innerHTML = `<div class="empty">No todos yet. Add one above.</div>`;
+    return;
+  }
+
+  listEl.innerHTML = todos.map(t => `
+    <div class="todo-row ${t.completed ? "done" : ""}" data-id="${t.id}">
+      <button class="todo-check" data-toggle="${t.id}" aria-label="Toggle">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg>
+      </button>
+      <div class="todo-text">${escapeHtml(t.text)}</div>
+      <button class="todo-delete-btn" data-delete="${t.id}" aria-label="Delete">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+  `).join("");
+
+  listEl.querySelectorAll("[data-toggle]").forEach(btn => {
+    btn.addEventListener("click", async () => {
+      const id = Number(btn.dataset.toggle);
+      const row = btn.closest(".todo-row");
+      const isDone = row.classList.contains("done");
+      await api(`/api/todos/${id}`, {
+        method: "PUT",
+        body: JSON.stringify({ completed: !isDone }),
+      });
+      await renderTodos();
+    });
+  });
+
+  listEl.querySelectorAll("[data-delete]").forEach(btn => {
+    btn.addEventListener("click", async () => {
+      const id = Number(btn.dataset.delete);
+      await api(`/api/todos/${id}`, { method: "DELETE" });
+      await renderTodos();
+    });
+  });
+}
+
+$("#new-todo-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const input = $("#new-todo-text");
+  const text = input.value.trim();
+  if (!text) return;
+  try {
+    await api("/api/todos", {
+      method: "POST",
+      body: JSON.stringify({ text, date: today() }),
+    });
+    input.value = "";
+    await renderTodos();
+  } catch (e) { alert(e.message); }
 });
 
 // ── Manage activities ─────────────────────────────────────────────

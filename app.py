@@ -14,10 +14,12 @@ def create_app():
     from routes.auth import auth_bp
     from routes.activities import activities_bp
     from routes.completions import completions_bp
+    from routes.todos import todos_bp
 
     app.register_blueprint(auth_bp, url_prefix="/api/auth")
     app.register_blueprint(activities_bp, url_prefix="/api")
     app.register_blueprint(completions_bp, url_prefix="/api")
+    app.register_blueprint(todos_bp, url_prefix="/api")
 
     with app.app_context():
         db.create_all()

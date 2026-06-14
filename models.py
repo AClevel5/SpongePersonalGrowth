@@ -11,6 +11,7 @@ class User(db.Model):
 
     activities = db.relationship("Activity", backref="user", lazy=True, cascade="all, delete-orphan")
     completions = db.relationship("Completion", backref="user", lazy=True, cascade="all, delete-orphan")
+    todos = db.relationship("Todo", backref="user", lazy=True, cascade="all, delete-orphan")
     webauthn_credentials = db.relationship("WebAuthnCredential", backref="user", lazy=True, cascade="all, delete-orphan")
 
 
@@ -59,4 +60,24 @@ class Completion(db.Model):
             "id": self.id,
             "activity_id": self.activity_id,
             "date": self.date.isoformat(),
+        }
+
+
+class Todo(db.Model):
+    __tablename__ = "todos"
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    text = db.Column(db.String(500), nullable=False)
+    date = db.Column(db.Date, nullable=False)
+    completed = db.Column(db.Boolean, nullable=False, default=False)
+    completed_at = db.Column(db.DateTime, nullable=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "text": self.text,
+            "date": self.date.isoformat(),
+            "completed": self.completed,
+            "completed_at": self.completed_at.isoformat() if self.completed_at else None,
         }
