@@ -97,10 +97,39 @@ $("#register-form").addEventListener("submit", async (e) => {
 });
 
 $("#logout-btn").addEventListener("click", async () => {
+  closeMenu();
   await api("/api/auth/logout", { method: "POST" });
   state.user = null;
   show($("#auth-screen"));
   hide($("#app-screen"));
+});
+
+// ── Top menu (hamburger) ─────────────────────────────────────────────
+function openMenu() {
+  $("#menu-dropdown").classList.remove("hidden");
+  $("#menu-btn").setAttribute("aria-expanded", "true");
+}
+function closeMenu() {
+  $("#menu-dropdown").classList.add("hidden");
+  $("#menu-btn").setAttribute("aria-expanded", "false");
+}
+function toggleMenu() {
+  $("#menu-btn").getAttribute("aria-expanded") === "true" ? closeMenu() : openMenu();
+}
+
+$("#menu-btn").addEventListener("click", (e) => {
+  e.stopPropagation();
+  toggleMenu();
+});
+
+// Close on outside click or Escape
+document.addEventListener("click", (e) => {
+  if (!$("#menu-dropdown").contains(e.target) && !$("#menu-btn").contains(e.target)) {
+    closeMenu();
+  }
+});
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") closeMenu();
 });
 
 // ── Passkeys ─────────────────────────────────────────────
@@ -120,6 +149,7 @@ function bufToB64url(buf) {
 }
 
 $("#passkey-add-btn").addEventListener("click", async () => {
+  closeMenu();
   try {
     const opts = await api("/api/auth/webauthn/register-options", { method: "POST" });
     opts.challenge = b64urlToBuf(opts.challenge);
