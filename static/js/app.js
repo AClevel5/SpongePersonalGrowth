@@ -454,9 +454,17 @@ async function renderActivitiesManage() {
     <div class="manage-row ${a.is_archived ? "archived" : ""}" data-id="${a.id}">
       <input type="text" class="edit-name" value="${escapeHtml(a.name)}" />
       <input type="number" class="edit-points" value="${a.points}" />
-      <button class="small-btn save-btn">Save</button>
-      <button class="small-btn ${a.is_archived ? "" : ""}">${a.is_archived ? "Unarchive" : "Archive"}</button>
-      <button class="small-btn danger delete-btn">Delete</button>
+      <button class="small-btn save-btn" title="Save" aria-label="Save">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+      </button>
+      <button class="small-btn archive-btn" title="${a.is_archived ? "Unarchive" : "Archive"}" aria-label="${a.is_archived ? "Unarchive" : "Archive"}">
+        ${a.is_archived
+          ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="5" rx="1"/><path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8"/><path d="M12 17V11M9 14l3-3 3 3"/></svg>`
+          : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="5" rx="1"/><path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8"/><path d="M10 12h4"/></svg>`}
+      </button>
+      <button class="small-btn danger delete-btn" title="Delete" aria-label="Delete">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+      </button>
     </div>
   `).join("");
 
@@ -472,9 +480,8 @@ async function renderActivitiesManage() {
       await loadActivities();
       await renderActivitiesManage();
     });
-    const archiveBtn = row.querySelectorAll(".small-btn")[1];
-    archiveBtn.addEventListener("click", async () => {
-      const isArchived = archiveBtn.textContent.trim() === "Unarchive";
+    row.querySelector(".archive-btn").addEventListener("click", async () => {
+      const isArchived = row.classList.contains("archived");
       await api(`/api/activities/${id}`, {
         method: "PUT",
         body: JSON.stringify({ is_archived: !isArchived }),

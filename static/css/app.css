@@ -929,16 +929,27 @@ input::placeholder { color: var(--text-faint); }
   color: var(--text-muted);
   border: 1px solid var(--border-strong);
   border-radius: 8px;
-  padding: 7px 11px;
-  font-size: 12px;
-  font-weight: 600;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
   transition: all 0.2s var(--ease);
 }
-.manage-row .small-btn:hover {
-  color: var(--text);
-  background: var(--surface-2);
+.manage-row .small-btn svg { width: 16px; height: 16px; }
+.manage-row .save-btn:hover {
+  color: var(--good);
+  border-color: var(--good);
+  background: var(--good-soft);
 }
-.manage-row .small-btn:active { transform: scale(0.95); }
+.manage-row .archive-btn:hover {
+  color: var(--text);
+  border-color: var(--text-muted);
+  background: var(--surface-3);
+}
+.manage-row .small-btn:active { transform: scale(0.92); }
 .manage-row .danger:hover {
   color: var(--bad);
   border-color: var(--bad);
@@ -947,16 +958,7 @@ input::placeholder { color: var(--text-faint); }
 
 @media (max-width: 480px) {
   .manage-row {
-    grid-template-columns: 1fr 80px;
-    grid-template-areas:
-      "name pts"
-      "save archive"
-      "delete delete";
-    gap: 8px;
+    grid-template-columns: 1fr 70px auto auto auto;
+    gap: 6px;
   }
-  .manage-row input[type="text"]   { grid-area: name; }
-  .manage-row input[type="number"] { grid-area: pts; }
-  .manage-row .save-btn            { grid-area: save; }
-  .manage-row .small-btn:nth-of-type(2) { grid-area: archive; }
-  .manage-row .delete-btn          { grid-area: delete; }
 }
