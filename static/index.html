@@ -102,14 +102,18 @@
   <main class="content">
     <!-- TODAY -->
     <section id="tab-today" class="tab-panel active">
+      <div class="day-nav">
+        <button class="icon-btn" id="today-prev" aria-label="Previous day">&larr;</button>
+        <div class="day-nav-label" id="today-date-label">Today</div>
+        <button class="icon-btn" id="today-next" aria-label="Next day">&rarr;</button>
+      </div>
       <div class="hero">
-        <div class="hero-label" id="today-date-label"></div>
         <div class="hero-points" id="today-total">0</div>
-        <div class="hero-sub">points today</div>
+        <div class="hero-sub">points</div>
       </div>
       <h3 class="section-title">Tap to log</h3>
       <div id="today-activities" class="activity-list"></div>
-      <h3 class="section-title">Logged today</h3>
+      <h3 class="section-title">Logged</h3>
       <div id="today-log" class="log-list"></div>
     </section>
 

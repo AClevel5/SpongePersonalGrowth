@@ -400,6 +400,22 @@ input::placeholder { color: var(--text-faint); }
 }
 .nav-tab.active::after { transform: translateX(-50%) scaleX(1); }
 
+/* ── Day nav (Today tab) ─────────────────────────────────────────────── */
+.day-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+.day-nav-label {
+  font-family: "Space Grotesk", "Inter", sans-serif;
+  font-weight: 700;
+  font-size: 17px;
+  letter-spacing: -0.5px;
+  text-align: center;
+  flex: 1;
+}
+
 /* ── Hero / Today ─────────────────────────────────────────────── */
 .hero {
   text-align: center;

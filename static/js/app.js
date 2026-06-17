@@ -47,6 +47,7 @@ const state = {
   user: null,
   activities: [],
   weekStart: mondayOf(new Date()),
+  todayDate: new Date(),
 };
 
 // ── Auth UI ─────────────────────────────────────────────
@@ -223,10 +224,20 @@ async function loadActivities() {
 }
 
 // ── Today ─────────────────────────────────────────────
+function dayNavLabel(d) {
+  const todayD = new Date(); todayD.setHours(0,0,0,0);
+  const target = new Date(d); target.setHours(0,0,0,0);
+  const diff = Math.round((target - todayD) / 86400000);
+  if (diff === 0) return "Today";
+  if (diff === -1) return "Yesterday";
+  if (diff === 1) return "Tomorrow";
+  return target.toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric" });
+}
+
 async function renderToday() {
-  const date = today();
-  const d = new Date();
-  $("#today-date-label").textContent = formatDay(d);
+  const d = state.todayDate;
+  const date = isoDate(d);
+  $("#today-date-label").textContent = dayNavLabel(d);
 
   const week = await api(`/api/week?start=${isoDate(mondayOf(d))}`);
   const todayDay = week.days.find(x => x.date === date);
@@ -268,7 +279,7 @@ async function renderToday() {
   const logEl = $("#today-log");
   const comps = todayDay ? [...todayDay.completions].reverse() : [];
   if (comps.length === 0) {
-    logEl.innerHTML = `<div class="empty">Nothing logged yet today.</div>`;
+    logEl.innerHTML = `<div class="empty">Nothing logged for this day.</div>`;
   } else {
     logEl.innerHTML = comps.map(c => `
       <div class="log-row">
@@ -351,6 +362,15 @@ $("#week-prev").addEventListener("click", () => {
 $("#week-next").addEventListener("click", () => {
   state.weekStart = addDays(state.weekStart, 7);
   renderWeek();
+});
+
+$("#today-prev").addEventListener("click", () => {
+  state.todayDate = addDays(state.todayDate, -1);
+  renderToday();
+});
+$("#today-next").addEventListener("click", () => {
+  state.todayDate = addDays(state.todayDate, 1);
+  renderToday();
 });
 
 // ── Todos ─────────────────────────────────────────────
