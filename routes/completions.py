@@ -90,17 +90,20 @@ def week_summary():
     start = _monday_of(start)  # normalize to Monday
     end = start + timedelta(days=6)
 
+    # Fetch 3 weeks worth of completions in one query (current + 2 prior)
+    history_start = start - timedelta(days=14)
     activities = {a.id: a for a in Activity.query.filter_by(user_id=user.id).all()}
 
     rows = (
         Completion.query
         .filter(Completion.user_id == user.id)
-        .filter(Completion.date >= start, Completion.date <= end)
+        .filter(Completion.date >= history_start, Completion.date <= end)
         .order_by(Completion.date, Completion.id)
         .all()
     )
 
-    by_date = {start + timedelta(days=i): [] for i in range(7)}
+    # Bucket completions per day
+    by_date = {}
     for c in rows:
         a = activities.get(c.activity_id)
         if not a:
@@ -112,22 +115,33 @@ def week_summary():
             "points": a.points,
         })
 
+    # Build per-week totals (current = index 0, prev = 1, prev-prev = 2)
+    week_totals = [0, 0, 0]
+    for offset, week_idx in ((0, 0), (-7, 1), (-14, 2)):
+        wk_start = start + timedelta(days=offset)
+        for i in range(7):
+            d = wk_start + timedelta(days=i)
+            week_totals[week_idx] += sum(c["points"] for c in by_date.get(d, []))
+
+    # Days array for the displayed week
     days = []
-    total = 0
     for i in range(7):
         d = start + timedelta(days=i)
         comps = by_date.get(d, [])
         day_points = sum(c["points"] for c in comps)
-        total += day_points
         days.append({
             "date": d.isoformat(),
             "points": day_points,
             "completions": comps,
         })
 
+    three_week_avg = round(sum(week_totals) / 3)
+
     return jsonify({
         "start": start.isoformat(),
         "end": end.isoformat(),
         "days": days,
-        "total": total,
+        "total": week_totals[0],
+        "prev_week_total": week_totals[1],
+        "three_week_avg": three_week_avg,
     })

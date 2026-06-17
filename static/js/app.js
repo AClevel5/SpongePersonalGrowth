@@ -299,6 +299,15 @@ async function renderWeek() {
   totalEl.classList.toggle("pos", total > 0);
   totalEl.classList.toggle("neg", total < 0);
 
+  const setStat = (el, n) => {
+    el.textContent = n > 0 ? `+${n}` : n;
+    el.classList.toggle("pos", n > 0);
+    el.classList.toggle("neg", n < 0);
+    el.classList.toggle("zero", n === 0);
+  };
+  setStat($("#week-prev-total"), week.prev_week_total);
+  setStat($("#week-three-avg"), week.three_week_avg);
+
   const todayStr = today();
   const grid = $("#week-grid");
   grid.innerHTML = week.days.map((day, i) => {

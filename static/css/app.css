@@ -767,6 +767,45 @@ input::placeholder { color: var(--text-faint); }
   pointer-events: none;
 }
 
+.week-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  transition: all 0.2s var(--ease);
+}
+
+.stat-card:hover { border-color: var(--border-strong); background: var(--surface-2); }
+
+.stat-label {
+  color: var(--text-faint);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 6px;
+}
+
+.stat-value {
+  font-family: "Space Grotesk", "Inter", sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.8px;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+}
+.stat-value.pos { color: var(--good); }
+.stat-value.neg { color: var(--bad); }
+.stat-value.zero { color: var(--text-muted); }
+
 .week-grid { display: flex; flex-direction: column; gap: 6px; }
 
 .day-row {
